@@ -1,0 +1,2 @@
+# Picard metrics - sample1 (dummy)
+MEAN_COVERAGE	30
