@@ -48,3 +48,21 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Datos de secuenciación
+*.fastq
+*.fastq.gz
+
+# Referencia y bases de datos
+*.fa
+*.fai
+*.dict
+data/reference/vep_cache/
+
+# Alineamientos
+*.bam
+*.bai
+
+# Variantes
+*.vcf.gz
+*.tbi
