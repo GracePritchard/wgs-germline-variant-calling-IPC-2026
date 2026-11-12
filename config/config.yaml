@@ -1,0 +1,5 @@
+samples: config/samples.tsv
+outdir: results
+reference: data/reference/hg38.fa
+dbsnp: data/reference/dbsnp.vcf.gz
+nvep_cache: data/reference/vep_cache
