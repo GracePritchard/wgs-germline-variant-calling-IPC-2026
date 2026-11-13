@@ -87,3 +87,61 @@ scripts/ # scripts de cada paso del pipeline
 ```
 
 Cada carpeta contiene un README con la descripción de los ficheros que se encuentran en ella. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
+
+## Instalación
+
+### Requisitos
+
+- [Conda](https://docs.conda.io/) (o [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- Sistema Linux (algunas herramientas, como BWA-MEM2, están pensadas para Linux x86_64 )
+- Espacio en disco para la referencia, la caché de VEP y los resultados (varios GB por muestra)
+
+### Pasos
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/<usuario>/wgs-germline-variant-calling-IPC-2026.git
+   cd wgs-germline-variant-calling-IPC-2026
+   ```
+
+2. Crea el entorno con todas las herramientas:
+
+   ```bash
+   conda env create -f envs/environment.yml
+   ```
+
+3. Actívalo:
+
+   ```bash
+   conda activate wgs-germline-variant-calling
+   ```
+
+4. Comprueba que las herramientas están disponibles:
+
+   ```bash
+   fastqc --version
+   bwa-mem2 version
+   samtools --version
+   gatk --version
+   vep --help
+   ```
+
+## Preparación de los datos
+
+Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejecutar el pipeline hay que:
+
+1. Colocar los FASTQ de cada muestra en `data/raw/`.
+2. Descargar el genoma hg38 en `data/reference/` y generar sus índices:
+
+   ```bash
+   samtools faidx data/reference/hg38.fa
+   gatk CreateSequenceDictionary -R data/reference/hg38.fa
+   bwa-mem2 index data/reference/hg38.fa
+   ```
+
+3. Descargar dbSNP y la caché de VEP en `data/reference/`:
+
+   ```bash
+   vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
+   ```
