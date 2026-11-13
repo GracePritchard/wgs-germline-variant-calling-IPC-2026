@@ -3,7 +3,7 @@
 [![Genoma de referencia](https://img.shields.io/badge/genoma-hg38-blue)](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.26/)
 [![Datos](https://img.shields.io/badge/datos-WGS-green)](data/)
 ![Variantes](https://img.shields.io/badge/variantes-SNV%20%7C%20INDEL-purple)
-[![Entorno](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![Entorno](https://img.shields.io/badge/ejecutar%20con-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Scripts](https://img.shields.io/badge/scripts-Bash-4EAA25?logo=gnubash&logoColor=white)](scripts/)
 ![Estado](https://img.shields.io/badge/estado-proyecto%20docente-orange)
 [![Licencia: MIT](https://img.shields.io/badge/licencia-GPLv3-yellow.svg)](LICENSE)
