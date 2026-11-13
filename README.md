@@ -145,3 +145,8 @@ Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejec
    ```bash
    vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
    ```
+
+## Instruciones de uso
+
+> [!NOTE]
+> En esta versión los scripts son esqueletos, así que los comandos siguientes muestran **cómo se ejecutaría el pipeline**, no producen resultados reales.
