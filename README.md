@@ -51,12 +51,14 @@ flowchart LR
     RAW[("raw.vcf.gz")]
     FIL[("filtered.vcf.gz")]
     ANN[("annotated.vcf.gz")]
+    QC[("Informes QC<br/>html / txt")]
 
     FASTQ --> S1
     FASTQ --> S2
     REF --> S2
     S2 --> BAM
     BAM --> S3
+    REF --> S3
     BAM --> S4
     REF --> S4
     DBSNP --> S4
@@ -66,6 +68,8 @@ flowchart LR
     FIL --> S6
     CACHE --> S6
     S6 --> ANN
+    S1 --> QC
+    S3 --> QC
 
     classDef paso fill:#dbeafe,stroke:#1d4ed8,color:#000
     classDef dato fill:#fef9c3,stroke:#a16207,color:#000
