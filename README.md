@@ -86,14 +86,14 @@ results/ # resultados: control de calidad (qc/), BAM (bam/) y VCF (vcf/)
 scripts/ # scripts de cada paso del pipeline
 ```
 
-Cada carpeta contiene un README con la descripción de los ficheros que se encuentran en ella. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
+Las subcarpetas dentro de 'data/' y 'results/' contienen ficheros README con la descripción de los ficheros que se encuentran en ellas. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
 
 ## Instalación
 
 ### Requisitos
 
 - [Conda](https://docs.conda.io/) (o [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
-- Sistema Linux (algunas herramientas, como BWA-MEM2, están pensadas para Linux x86_64 )
+- Sistema Linux (algunas herramientas, como BWA-MEM2, están pensadas para Linux x86_64)
 - Espacio en disco para la referencia, la caché de VEP y los resultados (varios GB por muestra)
 
 ### Pasos
@@ -123,6 +123,8 @@ Cada carpeta contiene un README con la descripción de los ficheros que se encue
    fastqc --version
    bwa-mem2 version
    samtools --version
+   picard --version
+   bcftools --version
    gatk --version
    vep --help
    ```
@@ -142,10 +144,20 @@ Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejec
 
 3. Descargar dbSNP y la caché de VEP en `data/reference/`:
 
-   ```bash
-   vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
-   ```
+   - **dbSNP**: disponible en el [GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). Una vez descargado, se comprime e indexa con el nombre que se indica en `config/config.yaml`:
 
+     ```bash
+     gsutil cp gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf data/reference/
+     bgzip -c data/reference/Homo_sapiens_assembly38.dbsnp138.vcf > data/reference/dbsnp.vcf.gz
+     tabix -p vcf data/reference/dbsnp.vcf.gz
+     ```
+
+   - **Caché de VEP** (GRCh38):
+
+     ```bash
+     vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
+     ```
+     
 ## Instruciones de uso
 
 > [!NOTE]
