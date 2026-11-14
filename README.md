@@ -86,7 +86,7 @@ results/ # resultados: control de calidad (qc/), BAM (bam/) y VCF (vcf/)
 scripts/ # scripts de cada paso del pipeline
 ```
 
-Las subcarpetas dentro de 'data/' y 'results/' contienen ficheros README con la descripción de los ficheros que se encuentran en ellas. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
+Las subcarpetas dentro de `data/` y `results/` contienen ficheros README con la descripción de los ficheros que se encuentran en ellas. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
 
 ## Instalación
 
@@ -157,7 +157,36 @@ Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejec
      ```bash
      vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
      ```
-     
+
+## Configuración
+
+Antes de ejecutar el pipeline, se deben completar los dos ficheros de la carpeta `config/`.
+
+### `config/samples.tsv`
+
+Contiene una fila por muestra, con su identificador y las rutas a sus ficheros FASTQ (R1 y R2), separados por tabuladores:
+
+```tsv
+sample_id	fastq_1	fastq_2
+sample1	data/raw/sample1_R1.fastq.gz	data/raw/sample1_R2.fastq.gz
+sample2	data/raw/sample2_R1.fastq.gz	data/raw/sample2_R2.fastq.gz
+```
+
+El `sample_id` es el identificador que se indica como argumento al ejecutar cada script.
+
+### `config/config.yaml`
+
+Contiene las rutas a la tabla de muestras, a la carpeta de resultados y a los ficheros de referencia:
+
+```yaml
+samples: config/samples.tsv
+outdir: results
+reference: data/reference/hg38.fa
+dbsnp: data/reference/dbsnp.vcf.gz
+vep_cache: data/reference/vep_cache
+```
+
+
 ## Instruciones de uso
 
 > [!NOTE]
