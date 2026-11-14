@@ -6,7 +6,7 @@
 [![Entorno](https://img.shields.io/badge/ejecutar%20con-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Scripts](https://img.shields.io/badge/scripts-Bash-4EAA25?logo=gnubash&logoColor=white)](scripts/)
 ![Estado](https://img.shields.io/badge/estado-proyecto%20docente-orange)
-[![Licencia: MIT](https://img.shields.io/badge/licencia-GPLv3-yellow.svg)](LICENSE)
+[![Licencia: GPL v3](https://img.shields.io/badge/licencia-GPLv3-yellow.svg)](LICENSE)
 
 Este repositorio contiene un pipeline para la detección de variantes germinales de tipo SNV (*single nucleotide variants*) e INDEL (inserciones y deleciones) a partir de datos de secuenciación de genoma completo (WGS), utilizando como referencia el genoma humano hg38.
 
@@ -150,3 +150,8 @@ Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejec
 
 > [!NOTE]
 > En esta versión los scripts son esqueletos, así que los comandos siguientes muestran **cómo se ejecutaría el pipeline**, no producen resultados reales.
+
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia GNU General Public License v3.0 (GPL-3.0). Esto quiere decir que se puede utilizar, modificar y redistribuir libremente, siempre que las versiones derivadas se distribuyan también bajo esta misma licencia. El texto completo se puede consultar en el fichero [LICENSE](LICENSE).
