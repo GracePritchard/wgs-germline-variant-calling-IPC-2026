@@ -2,12 +2,11 @@ name: wgs-germline-variant-calling
 channels:
   - conda-forge
   - bioconda
-# fijar versiones para reproducibilidad (p. ej. gatk4=4.6.1.0)
 dependencies:
-  - fastqc
-  - bwa-mem2
-  - samtools
-  - bcftools
-  - picard
-  - gatk4
-  - ensembl-vep
+  - fastqc=0.13.0
+  - bwa-mem2=2.3
+  - samtools=1.25
+  - bcftools=1.25
+  - picard=3.5.0
+  - gatk4=4.7.0.0
+  - ensembl-vep=116.3
