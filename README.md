@@ -84,8 +84,8 @@ Dado que este pipeline simula un análisis WGS completo, cada paso genera una se
 
 | Paso del Pipeline | Fichero / Directorio de salida | Descripción del resultado |
 | :--- | :--- | :--- |
-| **01. FastQC** | `results/qc/` | Informes en formato `.html` y `.txt` con métricas de calidad de las lecturas crudas. |
-| **02. BWA-MEM2** | `results/bam/` | Ficheros `.bam` ordenados y con marcas de duplicados (o listos para el procesado). |
+| **01. FastQC** | `results/qc/` | Informes en formato `.html` y `.zip` con métricas de calidad de las lecturas crudas. |
+| **02. BWA-MEM2** | `results/bam/` | Ficheros `.bam` ordenados e indexados. |
 | **03. Picard** | `results/qc/` | Métricas adicionales de calidad del alineamiento (cobertura, duplicación). |
 | **04. GATK HaplotypeCaller** | `results/vcf/` | Fichero comprimido con variantes brutas (`raw.vcf.gz` y su índice `.tbi`). |
 | **05. GATK VariantFiltration** | `results/vcf/` | Fichero VCF con el filtrado de calidad aplicado (`filtered.vcf.gz`). |
@@ -119,7 +119,7 @@ Las subcarpetas dentro de `data/` y `results/` contienen ficheros README con la 
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/<usuario>/wgs-germline-variant-calling-IPC-2026.git
+   git clone https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git
    cd wgs-germline-variant-calling-IPC-2026
    ```
 
@@ -205,7 +205,7 @@ vep_cache: data/reference/vep_cache
 ```
 
 
-## Instruciones de uso
+## Instrucciones de uso
 
 > [!NOTE]
 > En esta versión los scripts son esqueletos, así que los comandos siguientes muestran **cómo se ejecutaría el pipeline**, no producen resultados reales.
@@ -214,14 +214,14 @@ Para replicar o explorar este flujo de análisis bioinformático en un entorno U
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git](https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git)
+   git clone https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git
    cd wgs-germline-variant-calling-IPC-2026
    ```
 2. **Control de calidad inicial (FastQC):**
    ```bash
    bash scripts/01_fastq_qc.sh sample1
    ```
-3. **Alineamiento del genoma contra lecturas de referencia (BWA-MEM2):**
+3. **Alineamiento de las lecturas contra el genoma de referencia (BWA-MEM2):**
    ```bash
    bash scripts/02_alignment.sh sample1
    ```
