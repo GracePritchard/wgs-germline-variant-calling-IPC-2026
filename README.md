@@ -241,7 +241,13 @@ Para replicar o explorar este flujo de análisis bioinformático en un entorno U
    ```bash
    bash scripts/06_annotation.sh sample1
    ```
+## Autores
 
+Este proyecto ha sido desarrollado de forma colaborativa por el equipo de trabajo de la asignatura *Introducción a la Programación Científica* (Máster en Bioinformática, UNIR):
+
+- **Grace Zara Pritchard Nieves** - [GracePritchard](https://github.com/GracePritchard)
+- **Iria Roca Otero** - [iriaRoca-UNIR](https://github.com/iriaRoca-UNIR)
+- **Francisco de Borja Gómez Álvarez** - [franciscogomezalvarez2014-byte](https://github.com/franciscogomezalvarez2014-byte)
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia GNU General Public License v3.0 (GPL-3.0). Esto quiere decir que se puede utilizar, modificar y redistribuir libremente, siempre que las versiones derivadas se distribuyan también bajo esta misma licencia. El texto completo se puede consultar en el fichero [LICENSE](LICENSE).
