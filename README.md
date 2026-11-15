@@ -196,6 +196,37 @@ vep_cache: data/reference/vep_cache
 > [!NOTE]
 > En esta versión los scripts son esqueletos, así que los comandos siguientes muestran **cómo se ejecutaría el pipeline**, no producen resultados reales.
 
+Para replicar o explorar este flujo de análisis bioinformático en un entorno UNIX o Bash (Linux, macOS o Git Bash en Windows), siga los siguientes pasos:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git](https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git)
+   cd wgs-germline-variant-calling-IPC-2026
+   ```
+2. **Control de calidad inicial (FastQC):**
+   ```bash
+   bash scripts/01_fastq_qc.sh sample1
+   ```
+3. **Alineamiento del genoma contra lecturas de referencia (BWA-MEM2):**
+   ```bash
+   bash scripts/02_alignment.sh sample1
+   ```
+4. **Control de calidad del alineamiento (Picard):**
+   ```bash
+   bash scripts/03_bam_qc.sh sample1
+   ```
+5. **Llamada de variantes germinales (GATK HaplotypeCaller):**
+   ```bash
+   bash scripts/04_variant_calling.sh sample1
+   ```
+6. **Filtrado de variantes (GATK VariantFiltration):**
+   ```bash
+   bash scripts/05_variant_filtering.sh sample1
+   ```
+7. **Anotación de variantes (VEP):**
+   ```bash
+   bash scripts/06_annotation.sh sample1
+   ```
 
 ## Licencia
 
