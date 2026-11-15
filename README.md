@@ -1,2 +1,253 @@
-# wgs-germline-variant-calling-IPC-2026
-Pipeline bioinformático para la detección de variantes germinales (SNVs e INDELs) a partir de datos de secuenciación del genoma completo (WGS).
+# Detección de variantes germinales (SNVs e INDELs) en genoma completo (WGS)
+
+[![Genoma de referencia](https://img.shields.io/badge/genoma-hg38-blue)](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.26/)
+[![Datos](https://img.shields.io/badge/datos-WGS-green)](data/)
+![Variantes](https://img.shields.io/badge/variantes-SNV%20%7C%20INDEL-purple)
+[![Entorno](https://img.shields.io/badge/ejecutar%20con-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![Scripts](https://img.shields.io/badge/scripts-Bash-4EAA25?logo=gnubash&logoColor=white)](scripts/)
+![Estado](https://img.shields.io/badge/estado-proyecto%20docente-orange)
+[![Licencia: GPL v3](https://img.shields.io/badge/licencia-GPLv3-yellow.svg)](LICENSE)
+
+Este repositorio contiene un pipeline para la detección de variantes germinales de tipo SNV (*single nucleotide variants*) e INDEL (inserciones y deleciones) a partir de datos de secuenciación de genoma completo (WGS), utilizando como referencia el genoma humano hg38.
+
+> [!WARNING]
+> **Proyecto docente: simulación con fines exclusivamente académicos.**
+>
+> Este repositorio se ha creado para la asignatura _Introducción a la Programación Científica_ del Máster en Bioinformática de la UNIR, con el objetivo de practicar el uso de Git y GitHub. **No es un pipeline funcional ni validado.**
+>
+> Los scripts son esqueletos (pueden estar vacíos) y los resultados son ficheros de ejemplo. **No debe usarse para análisis científicos ni clínicos.**
+
+
+## Objetivo
+
+El objetivo del proyecto es, a partir de los ficheros FASTQ de cada muestra, obtener un fichero VCF con las variantes filtradas y anotadas.
+
+## Pipeline
+
+El pipeline consta de seis pasos, cada uno implementado en un script de la carpeta `scripts/`:
+
+1. `01_fastq_qc.sh`: control de calidad de las lecturas en bruto (FastQC).
+2. `02_alignment.sh`: alineamiento contra hg38 (BWA-MEM2).
+3. `03_bam_qc.sh`: control de calidad del alineamiento (Picard).
+4. `04_variant_calling.sh`: llamada de variantes (GATK HaplotypeCaller).
+5. `05_variant_filtering.sh`: filtrado de variantes (GATK VariantFiltration).
+6. `06_annotation.sh`: anotación de variantes (VEP).
+
+```mermaid
+flowchart LR
+    FASTQ[("FASTQ<br/>lecturas en bruto")]
+    REF[("hg38.fa<br/>referencia")]
+    DBSNP[("dbSNP")]
+    CACHE[("Caché de VEP")]
+
+    S1["01 · FastQC<br/>control de calidad"]
+    S2["02 · BWA-MEM2<br/>alineamiento"]
+    S3["03 · Picard<br/>métricas del BAM"]
+    S4["04 · HaplotypeCaller<br/>llamada de variantes"]
+    S5["05 · VariantFiltration<br/>filtrado"]
+    S6["06 · VEP<br/>anotación"]
+
+    BAM[("BAM")]
+    RAW[("raw.vcf.gz")]
+    FIL[("filtered.vcf.gz")]
+    ANN[("annotated.vcf.gz")]
+    QC[("Informes QC<br/>html / txt")]
+
+    FASTQ --> S1
+    FASTQ --> S2
+    REF --> S2
+    S2 --> BAM
+    BAM --> S3
+    REF --> S3
+    BAM --> S4
+    REF --> S4
+    DBSNP --> S4
+    S4 --> RAW
+    RAW --> S5
+    S5 --> FIL
+    FIL --> S6
+    CACHE --> S6
+    S6 --> ANN
+    S1 --> QC
+    S3 --> QC
+
+    classDef paso fill:#dbeafe,stroke:#1d4ed8,color:#000
+    classDef dato fill:#fef9c3,stroke:#a16207,color:#000
+    classDef final fill:#dcfce7,stroke:#15803d,color:#000
+
+    class S1,S2,S3,S4,S5,S6 paso
+    class FASTQ,REF,DBSNP,CACHE,BAM,RAW,FIL dato
+    class ANN final
+```
+## Salidas esperadas
+Dado que este pipeline simula un análisis WGS completo, cada paso genera una serie de ficheros organizados dentro de la carpeta `results/`. A continuación se detallan las principales salidas por cada etapa del flujo:
+
+| Paso del Pipeline | Fichero / Directorio de salida | Descripción del resultado |
+| :--- | :--- | :--- |
+| **01. FastQC** | `results/qc/` | Informes en formato `.html` y `.txt` con métricas de calidad de las lecturas crudas. |
+| **02. BWA-MEM2** | `results/bam/` | Ficheros `.bam` ordenados y con marcas de duplicados (o listos para el procesado). |
+| **03. Picard** | `results/qc/` | Métricas adicionales de calidad del alineamiento (cobertura, duplicación). |
+| **04. GATK HaplotypeCaller** | `results/vcf/` | Fichero comprimido con variantes brutas (`raw.vcf.gz` y su índice `.tbi`). |
+| **05. GATK VariantFiltration** | `results/vcf/` | Fichero VCF con el filtrado de calidad aplicado (`filtered.vcf.gz`). |
+| **06. VEP** | `results/vcf/` | Fichero final anotado funcionalmente (`annotated.vcf.gz`). |
+
+> [!NOTE]
+> Al tratarse de un repositorio docente con scripts en modo *esqueletos*, la ejecución de los scripts no generará automáticamente estos ficheros de gran tamaño, pero esta es la estructura de directorios y nomenclatura que el pipeline espera producir.
+
+## Estructura del repositorio
+
+```
+config/  # configuración del pipeline (config.yaml, samples.tsv)
+data/    # datos de entrada: FASTQ (raw/) y referencia (reference/)
+envs/    # entorno conda con las herramientas necesarias
+results/ # resultados: control de calidad (qc/), BAM (bam/) y VCF (vcf/)
+scripts/ # scripts de cada paso del pipeline
+```
+
+Las subcarpetas dentro de `data/` y `results/` contienen ficheros README con la descripción de los ficheros que se encuentran en ellas. Dado que los ficheros FASTQ, BAM y VCF ocupan varios GB por muestra, se han excluido del repositorio mediante el `.gitignore`.
+
+## Instalación
+
+### Requisitos
+
+- [Conda](https://docs.conda.io/) (o [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- Sistema Linux (algunas herramientas, como BWA-MEM2, están pensadas para Linux x86_64)
+- Espacio en disco para la referencia, la caché de VEP y los resultados (varios GB por muestra)
+
+### Pasos
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/<usuario>/wgs-germline-variant-calling-IPC-2026.git
+   cd wgs-germline-variant-calling-IPC-2026
+   ```
+
+2. Crea el entorno con todas las herramientas:
+
+   ```bash
+   conda env create -f envs/environment.yml
+   ```
+
+3. Actívalo:
+
+   ```bash
+   conda activate wgs-germline-variant-calling
+   ```
+
+4. Comprueba que las herramientas están disponibles:
+
+   ```bash
+   fastqc --version
+   bwa-mem2 version
+   samtools --version
+   picard --version
+   bcftools --version
+   gatk --version
+   vep --help
+   ```
+
+## Preparación de los datos
+
+Los datos no se incluyen en el repositorio (ver [`data/`](data/)). Antes de ejecutar el pipeline hay que:
+
+1. Colocar los FASTQ de cada muestra en `data/raw/`.
+2. Descargar el genoma hg38 en `data/reference/` y generar sus índices:
+
+   ```bash
+   samtools faidx data/reference/hg38.fa
+   gatk CreateSequenceDictionary -R data/reference/hg38.fa
+   bwa-mem2 index data/reference/hg38.fa
+   ```
+
+3. Descargar dbSNP y la caché de VEP en `data/reference/`:
+
+   - **dbSNP**: disponible en el [GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). Una vez descargado, se comprime e indexa con el nombre que se indica en `config/config.yaml`:
+
+     ```bash
+     gsutil cp gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf data/reference/
+     bgzip -c data/reference/Homo_sapiens_assembly38.dbsnp138.vcf > data/reference/dbsnp.vcf.gz
+     tabix -p vcf data/reference/dbsnp.vcf.gz
+     ```
+
+   - **Caché de VEP** (GRCh38):
+
+     ```bash
+     vep_install -a cf -s homo_sapiens -y GRCh38 -c data/reference/vep_cache
+     ```
+
+## Configuración
+
+Antes de ejecutar el pipeline, se deben completar los dos ficheros de la carpeta `config/`.
+
+### `config/samples.tsv`
+
+Contiene una fila por muestra, con su identificador y las rutas a sus ficheros FASTQ (R1 y R2), separados por tabuladores:
+
+```tsv
+sample_id	fastq_1	fastq_2
+sample1	data/raw/sample1_R1.fastq.gz	data/raw/sample1_R2.fastq.gz
+sample2	data/raw/sample2_R1.fastq.gz	data/raw/sample2_R2.fastq.gz
+```
+
+El `sample_id` es el identificador que se indica como argumento al ejecutar cada script.
+
+### `config/config.yaml`
+
+Contiene las rutas a la tabla de muestras, a la carpeta de resultados y a los ficheros de referencia:
+
+```yaml
+samples: config/samples.tsv
+outdir: results
+reference: data/reference/hg38.fa
+dbsnp: data/reference/dbsnp.vcf.gz
+vep_cache: data/reference/vep_cache
+```
+
+
+## Instruciones de uso
+
+> [!NOTE]
+> En esta versión los scripts son esqueletos, así que los comandos siguientes muestran **cómo se ejecutaría el pipeline**, no producen resultados reales.
+
+Para replicar o explorar este flujo de análisis bioinformático en un entorno UNIX o Bash (Linux, macOS o Git Bash en Windows), siga los siguientes pasos:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git](https://github.com/GracePritchard/wgs-germline-variant-calling-IPC-2026.git)
+   cd wgs-germline-variant-calling-IPC-2026
+   ```
+2. **Control de calidad inicial (FastQC):**
+   ```bash
+   bash scripts/01_fastq_qc.sh sample1
+   ```
+3. **Alineamiento del genoma contra lecturas de referencia (BWA-MEM2):**
+   ```bash
+   bash scripts/02_alignment.sh sample1
+   ```
+4. **Control de calidad del alineamiento (Picard):**
+   ```bash
+   bash scripts/03_bam_qc.sh sample1
+   ```
+5. **Llamada de variantes germinales (GATK HaplotypeCaller):**
+   ```bash
+   bash scripts/04_variant_calling.sh sample1
+   ```
+6. **Filtrado de variantes (GATK VariantFiltration):**
+   ```bash
+   bash scripts/05_variant_filtering.sh sample1
+   ```
+7. **Anotación de variantes (VEP):**
+   ```bash
+   bash scripts/06_annotation.sh sample1
+   ```
+## Autores
+
+Este proyecto ha sido desarrollado de forma colaborativa por el equipo de trabajo de la asignatura *Introducción a la Programación Científica* (Máster en Bioinformática, UNIR):
+
+- **Grace Zara Pritchard Nieves** - [GracePritchard](https://github.com/GracePritchard)
+- **Iria Roca Otero** - [iriaRoca-UNIR](https://github.com/iriaRoca-UNIR)
+- **Francisco de Borja Gómez Álvarez** - [franciscogomezalvarez2014-byte](https://github.com/franciscogomezalvarez2014-byte)
+## Licencia
+
+Este proyecto se distribuye bajo la licencia GNU General Public License v3.0 (GPL-3.0). Esto quiere decir que se puede utilizar, modificar y redistribuir libremente, siempre que las versiones derivadas se distribuyan también bajo esta misma licencia. El texto completo se puede consultar en el fichero [LICENSE](LICENSE).
