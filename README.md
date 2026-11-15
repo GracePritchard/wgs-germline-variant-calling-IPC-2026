@@ -79,6 +79,20 @@ flowchart LR
     class FASTQ,REF,DBSNP,CACHE,BAM,RAW,FIL dato
     class ANN final
 ```
+## Salidas esperadas
+Dado que este pipeline simula un análisis WGS completo, cada paso genera una serie de ficheros organizados dentro de la carpeta `results/`. A continuación se detallan las principales salidas por cada etapa del flujo:
+
+| Paso del Pipeline | Fichero / Directorio de salida | Descripción del resultado |
+| :--- | :--- | :--- |
+| **01. FastQC** | `results/qc/` | Informes en formato `.html` y `.txt` con métricas de calidad de las lecturas crudas. |
+| **02. BWA-MEM2** | `results/bam/` | Ficheros `.bam` ordenados y con marcas de duplicados (o listos para el procesado). |
+| **03. Picard** | `results/qc/` | Métricas adicionales de calidad del alineamiento (cobertura, duplicación). |
+| **04. GATK HaplotypeCaller** | `results/vcf/` | Fichero comprimido con variantes brutas (`raw.vcf.gz` y su índice `.tbi`). |
+| **05. GATK VariantFiltration** | `results/vcf/` | Fichero VCF con el filtrado de calidad aplicado (`filtered.vcf.gz`). |
+| **06. VEP** | `results/vcf/` | Fichero final anotado funcionalmente (`annotated.vcf.gz`). |
+
+> [!NOTE]
+> Al tratarse de un repositorio docente con scripts en modo *esqueletos*, la ejecución de los scripts no generará automáticamente estos ficheros de gran tamaño, pero esta es la estructura de directorios y nomenclatura que el pipeline espera producir.
 
 ## Estructura del repositorio
 
